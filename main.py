@@ -26,6 +26,6 @@ if __name__ == '__main__':
 
     review = paragrafo(text)
     review.remove_punctuation()
-    review.remove_extra_spaces()
     review.remove_numeric_chars()
+    review.remove_extra_spaces()
     print(review.get_paragraph())

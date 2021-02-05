@@ -5,6 +5,8 @@ Created on Wed Jan 13 23:20:38 2021
 @author: Ahmad
 """
 from string import punctuation
+import re
+import numpy as np
 
 class parola():
 
@@ -51,7 +53,38 @@ class parola():
         
         return chars_num_dict
 
+    def levenshtein_distance(self, target, case=True):
+        if case==False:
+            self.word = self.word.lower()
+            target = target.lower()
 
+        n = len(self.word)
+        m = len(target)
+        
+        if n==0:
+            return m, np.zeros(shape=(0,0))
+        
+        if m==0:
+            return n, np.zeros(shape=(0,0))
+            
+        matrix = np.zeros(shape=(n+1,m+1))
+        matrix[0], matrix[:,0]  = range(0,m+1), range(0,n+1)
+        
+        s__, t__ = list(self.word), list(target)
+
+        for i in range(1,n+1):
+            for j in range(1,m+1):
+                if s__[i-1] == t__[j-1]:
+                    cost = 0
+                else:
+                    cost = 1
+
+                matrix[i,j] = min(matrix[i-1,j]+1, matrix[i,j-1]+1, matrix[i-1,j-1]+cost)
+
+        return matrix[n,m], matrix
+        
+
+        
 class frase():
 
     def __init__(self, sentence):
@@ -79,12 +112,11 @@ class paragrafo():
         self.paragraph = ' '.join(self.paragraph.split())
 
     def remove_numeric_chars(self):
-        numeric_list = [0,1,2,3,4,5,6,7,8,9]
-        self.paragraph = ' '.join([i for i in self.paragraph.split() if i not in numeric_list])
+        self.paragraph = re.sub(" \d+", " ", self.paragraph)
 
 if __name__ == '__main__':
 
-    new_word = word('testing')
+    new_word = parola('testing')
     
     print(new_word.get_word())
     print(new_word.get_length())
@@ -100,7 +132,7 @@ if __name__ == '__main__':
     print(new_word.get_char_count('t'))
     
     
-    new_sentence = sentence('this is a test')
+    new_sentence = frase('this is a test')
     
     print(new_sentence.get_sentence())
     print(new_sentence.get_words())
@@ -108,7 +140,12 @@ if __name__ == '__main__':
     words_in_sentence = new_sentence.get_words()
     
     for each_word in words_in_sentence:
-        new_word = word(each_word)
+        new_word = parola(each_word)
+        lev_d, lev_mat = new_word.levenshtein_distance('testing', case=False)
+        print("distance:", lev_d)
+        print("matrix:\n")
+        print(lev_mat)
+        
         print(new_word.get_word())
         print(new_word.get_length())
         print(new_word.get_char_count('t'))
@@ -120,4 +157,5 @@ if __name__ == '__main__':
         print(new_word.get_chars_pct_dict())
         
         new_word.remove_char('t','', inplace=True)
-        print(new_word.get_char_count('t'))   
+        print(new_word.get_char_count('t'))
+        
