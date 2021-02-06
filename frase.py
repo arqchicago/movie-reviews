@@ -7,6 +7,9 @@ Created on Wed Jan 13 23:20:38 2021
 from string import punctuation
 import re
 import numpy as np
+from nltk.corpus import stopwords
+
+cachedStopWords = stopwords.words("english")
 
 class parola():
 
@@ -18,6 +21,9 @@ class parola():
 
     def get_length(self):
         return len(self.word)
+
+    def conv_lower(self):
+        self.word = self.word.lower()
 
     def get_char_list(self):
         return list(self.word)
@@ -113,6 +119,20 @@ class paragrafo():
 
     def remove_numeric_chars(self):
         self.paragraph = re.sub(" \d+", " ", self.paragraph)
+        
+    def lower_case_words(self):
+        words = self.paragraph.split()
+        processed_words_list = []
+        
+        for word in words:
+            word_processed = parola(word)
+            word_processed.conv_lower()
+            processed_words_list.append(word_processed.get_word())
+            
+        self.paragraph = ' '.join([word for word in processed_words_list])
+
+    def remove_stop_words(self):          
+        self.paragraph = ' '.join([word for word in self.paragraph.split() if word not in cachedStopWords])
 
 if __name__ == '__main__':
 

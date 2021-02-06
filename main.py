@@ -29,3 +29,6 @@ if __name__ == '__main__':
     review.remove_numeric_chars()
     review.remove_extra_spaces()
     print(review.get_paragraph())
+    review.lower_case_words()
+    review.remove_stop_words()
+    print(review.get_paragraph())
