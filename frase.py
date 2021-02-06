@@ -8,8 +8,9 @@ from string import punctuation
 import re
 import numpy as np
 from nltk.corpus import stopwords
+from nltk import PorterStemmer
 
-cachedStopWords = stopwords.words("english")
+stop_word_list = stopwords.words("english")
 
 class parola():
 
@@ -88,6 +89,11 @@ class parola():
                 matrix[i,j] = min(matrix[i-1,j]+1, matrix[i,j-1]+1, matrix[i-1,j-1]+cost)
 
         return matrix[n,m], matrix
+
+    def stem_it(self):
+        stemmer = PorterStemmer()
+        self.word = stemmer.stem(self.word)
+
         
 
         
@@ -132,7 +138,24 @@ class paragrafo():
         self.paragraph = ' '.join([word for word in processed_words_list])
 
     def remove_stop_words(self):          
-        self.paragraph = ' '.join([word for word in self.paragraph.split() if word not in cachedStopWords])
+        self.paragraph = ' '.join([word for word in self.paragraph.split() if word not in stop_word_list])
+
+    def remove_words_with_length(self, length):       
+        self.paragraph = ' '.join([word for word in self.paragraph.split() if len(word)!= length])
+
+    def stemmer(self):
+        words = self.paragraph.split()
+        processed_words_list = []
+        
+        for word in words:
+            word_processed = parola(word)
+            word_processed.stem_it()
+            processed_words_list.append(word_processed.get_word())
+            
+        self.paragraph = ' '.join([word for word in processed_words_list])
+        
+        
+
 
 if __name__ == '__main__':
 

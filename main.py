@@ -21,14 +21,23 @@ if __name__ == '__main__':
     neg_files = [f for f in listdir(neg_folder) if isfile(join(neg_folder, f))]
     pos_files = [f for f in listdir(pos_folder) if isfile(join(pos_folder, f))]
     
-    with open(neg_folder+'//'+neg_files[0], 'r') as file:
-        text = file.read().replace('\n', '')
+    for neg_file in neg_files[0:1]:
+        with open(neg_folder+'//'+neg_file, 'r') as file:
+            text = file.read().replace('\n', '')
 
-    review = paragrafo(text)
-    review.remove_punctuation()
-    review.remove_numeric_chars()
-    review.remove_extra_spaces()
-    print(review.get_paragraph())
-    review.lower_case_words()
-    review.remove_stop_words()
-    print(review.get_paragraph())
+        review = paragrafo(text)
+        review.remove_punctuation()
+        review.remove_numeric_chars()
+        review.remove_extra_spaces()
+        #print(review.get_paragraph())
+        review.lower_case_words()
+        review.remove_stop_words()
+        print(review.get_paragraph())
+        print('\n')
+        
+        for i in range(0,3):
+            review.remove_words_with_length(i)
+            
+        review.stemmer()
+        print(review.get_paragraph())
+            
