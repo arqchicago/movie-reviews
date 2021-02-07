@@ -118,7 +118,7 @@ class paragrafo():
         return self.paragraph
 
     def remove_punctuation(self):
-        self.paragraph = self.paragraph.translate(str.maketrans('', '', punctuation))
+        self.paragraph = self.paragraph.translate(str.maketrans(' ', ' ', punctuation))
 
     def remove_extra_spaces(self):
         self.paragraph = ' '.join(self.paragraph.split())
@@ -140,8 +140,11 @@ class paragrafo():
     def remove_stop_words(self):          
         self.paragraph = ' '.join([word for word in self.paragraph.split() if word not in stop_word_list])
 
-    def remove_words_with_length(self, length):       
-        self.paragraph = ' '.join([word for word in self.paragraph.split() if len(word)!= length])
+    def remove_words_with_length(self, length):
+        if type(length)==list:
+            self.paragraph = ' '.join([word for word in self.paragraph.split() if len(word) not in length])
+        else:
+            self.paragraph = ' '.join([word for word in self.paragraph.split() if len(word)!= length])
 
     def stemmer(self):
         words = self.paragraph.split()
